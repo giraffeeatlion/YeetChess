@@ -1,0 +1,1 @@
+"""YeetChess Backend Package"""

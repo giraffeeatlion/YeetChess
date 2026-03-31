@@ -1,0 +1,10 @@
+{
+  "include": ["."],
+  "exclude": ["node_modules", "__pycache__", ".venv", "venv"],
+  "venvPath": "/home/lalithkommasani/.cache/pypoetry/virtualenvs",
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux",
+  "typeCheckingMode": "basic",
+  "reportUnusedImport": true,
+  "reportPrivateUsage": false
+}
