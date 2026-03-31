@@ -8,7 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api.auth import router as auth_router
 from .api.games import router as games_router
+from .api.websocket import router as websocket_router
 from .database import init_db, close_db
+from .utils.redis_client import redis_client
 from .config import settings
 
 app = FastAPI(
@@ -29,24 +31,27 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(games_router)
+app.include_router(websocket_router)
 
 
 # Startup and shutdown events
 @app.on_event("startup")
 async def startup():
-    """Initialize database on startup"""
+    """Initialize database and Redis on startup"""
     try:
         await init_db()
+        await redis_client.connect()
     except Exception as e:
-        print(f"Warning: Could not initialize database: {e}")
-        # Don't fail startup if DB isn't ready yet
+        print(f"Warning: Could not initialize services: {e}")
+        # Don't fail startup if services aren't ready yet
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    """Close database connections on shutdown"""
+    """Close database and Redis connections on shutdown"""
     try:
         await close_db()
+        await redis_client.disconnect()
     except Exception as e:
         print(f"Warning: Error closing database: {e}")
 
